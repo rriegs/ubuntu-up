@@ -26,6 +26,9 @@ STEAM_LIST="/etc/apt/sources.list.d/steam.list"
 APT_PKGS=(aptitude code steam nautilus-dropbox)
 SNAP_PKGS=(pied discord)
 
+# ── Dotfiles ──────────────────────────────────────────────────────────────────
+SYMLINK_DIRS=(.emacs.d/site-lisp)
+
 # ── UI helpers ────────────────────────────────────────────────────────────────
 say()  { printf "\n\033[1;34m==>\033[0m %s\n" "$*"; }
 warn() { printf "\n\033[1;33m!!\033[0m %s\n" "$*"; }
@@ -140,8 +143,13 @@ symlink_dotfiles() {
     return 0
   fi
 
-  mkdir -p "$HOME/.emacs.d"
-  ln -s "$dfdir/.emacs.d/site-lisp" "$HOME/.emacs.d"
+  # Special case for directories that should be symlinked wholesale.
+  for dir in "${SYMLINK_DIRS[@]}"; do
+    if [[ -e "$dfdir/$dir" && ! -e "$HOME/$dir" ]]; then
+      mkdir -p "$(dirname "$HOME/$dir")"
+      ln -s "$dfdir/$dir" "$HOME/$dir"
+    fi
+  done
 
   while IFS= read -r -d '' file; do
     local rel="${file#$dfdir/}"

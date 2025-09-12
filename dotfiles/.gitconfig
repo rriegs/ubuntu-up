@@ -1,0 +1,17 @@
+[user]
+	name = Ryan Riegel
+	email = rriegs@gmail.com
+[core]
+	editor = emacs -nw --no-desktop
+[push]
+	default = simple
+[diff]
+        algorithm = histogram
+	tool = vimdiff
+	wordRegex = [[:alnum:]]+|[^[:space:]]
+[alias]
+	wdiff = diff --color-words
+[status]
+	showUntrackedFiles = no
+[color]
+	ui = auto

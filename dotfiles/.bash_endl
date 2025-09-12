@@ -1,0 +1,20 @@
+#!/bin/bash
+
+## Add a magic newline before the Bash prompt
+#
+# Some commands (especially after Ctrl-C) fail to emit a newline
+# before the next Bash prompt, which results in ugly formatting and
+# can interfere with in-line editing of history, among other things.
+#
+# This script makes sure the Bash prompt always gets the newline it
+# deserves
+
+function magic_endl {
+    echo -en '\033[6n'
+    read -sdR MAGIC_ENDL_POS
+    [[ "${MAGIC_ENDL_POS##*;}" != 1 ]] && echo
+}
+
+export -f magic_endl
+
+PROMPT_COMMAND+=${PROMPT_COMMAND:+;}'magic_endl'

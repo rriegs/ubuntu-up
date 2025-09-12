@@ -1,0 +1,45 @@
+#!/bin/bash
+
+## QQ suite of pushd/popd wrappers for Bash
+#
+# Commands matching qq[a-z] are bound to keystrokes M-[A-Z].
+
+## Precede simple commands with @ to silence them
+alias @='>/dev/null'
+
+## Print a well-formatted listing of DIRSTACK
+function qqd { dirs -l "${*:++0}${*:--v}"; }
+## Push directory ARG (default pwd) onto DIRSTACK
+function qqc { @ pushd "${*:-.}/" && qqd; }
+## Remove ARGth entry (default top) from DIRSTACK
+function qqk { QQD=$(qqd 0$*) && @ popd "+0$*" && qqd; }
+
+## Move ARGth entry (default second) to top of DIRSTACK
+function qqs { @ qqk 0${*:-1} && qqc $QQD; }
+## Rotate ARGth entry (default second) to top of DISRATCK
+function qqr { @ pushd "+0${*:-1}" && qqd; }
+## Rotate ARGth entry from end (default last) to the top
+function qqt { @ pushd "-0${*:+$(($*-1))}" && qqd; }
+
+# Permit use in embedded shells
+export -f qqd
+export -f qqc
+export -f qqk
+export -f qqs
+export -f qqr
+export -f qqt
+
+# Record DIRSTACK with every command
+PROMPT_COMMAND+=${PROMPT_COMMAND:+;}'dirs -l -p >~/.dirstack'
+
+# Load saved DIRSTACK
+if [ -s ~/.dirstack ]; then
+    QQ_OLD_IFS=$IFS
+    IFS=$'\n'
+    while read QQD; do
+        @ pushd "$QQD/"
+        @ pushd +1
+    done <~/.dirstack
+    @ popd
+    IFS=$QQ_OLD_IFS
+fi

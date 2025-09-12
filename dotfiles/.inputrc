@@ -1,0 +1,17 @@
+$include /etc/inputrc
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\eD": '\C-a qqd \n'
+"\eC": '\C-a qqc \n'
+"\eK": '\C-a qqk \n'
+"\eY": '\C-a qqc $QQD \n'
+"\eJ": '\C-a qqk 1 \n'
+"\eS": '\C-a qqs \n'
+"\eR": '\C-a qqr \n'
+"\eT": '\C-a qqt \n'
+"\eq\eq": '\eD'
+"\eq\e[A": '\eC'
+"\eq\e[B": '\eK'
+"\eq\e[C": '\eR'
+"\eq\e[D": '\eT'

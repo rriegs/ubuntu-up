@@ -113,17 +113,6 @@ snap_install_all() {
   done
 }
 
-caps_to_super() {
-  say "Mapping Caps Lock → Super…"
-  # Read current options; default to [] if unset
-  local current="$(gsettings get org.gnome.desktop.input-sources xkb-options 2>/dev/null || echo "[]")"
-  if [[ "$current" == *"caps:super"* ]]; then
-    say "Caps→Super already set."
-  else
-    gsettings set org.gnome.desktop.input-sources xkb-options "${current%]}, 'caps:super']"
-  fi
-}
-
 load_gnome_dconf() {
   local dfile="$CHECKOUT_DIR/gnome.dconf"
   if [[ -f "$dfile" ]]; then
@@ -189,7 +178,6 @@ main() {
   clone_repo
   apt_install_all
   snap_install_all
-  caps_to_super
   load_gnome_dconf
   symlink_dotfiles
   say "All done. 🧰 Fresh Ubuntu is ready to roll."
